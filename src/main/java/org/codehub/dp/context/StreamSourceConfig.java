@@ -15,6 +15,7 @@ public class StreamSourceConfig {
     /*
      * CDC Source Common
      */
+    public static final String CDC_SOURCE_COMMON_REQUIRED_DB_TYPE = "cdc.db.type";
     public static final String CDC_SOURCE_COMMON_REQUIRED_HOSTNAME = "cdc.hostname";
     public static final String CDC_SOURCE_COMMON_REQUIRED_SCHEMA = "cdc.schema";
     public static final String CDC_SOURCE_COMMON_REQUIRED_DATABASE = "cdc.database";

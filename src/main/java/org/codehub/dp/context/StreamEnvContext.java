@@ -25,6 +25,9 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.StringUtils;
+import org.codehub.dp.util.DBType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -86,6 +89,18 @@ public class StreamEnvContext {
 
         return env.fromSource(source,
                 watermarkStrategy == null ? WatermarkStrategy.noWatermarks() : watermarkStrategy, KAFKA_SOURCE_DEFAULT_SOURCE_NAME);
+    }
+
+    public static DataStream<String> getCdcSource(StreamExecutionEnvironment env, String configFilepath) throws Exception {
+        ParameterTool params = ParameterTool.fromPropertiesFile(configFilepath);
+        String dbType = params.getRequired(CDC_SOURCE_COMMON_REQUIRED_DB_TYPE);
+        if (dbType.equalsIgnoreCase(DBType.MYSQL.getName())) {
+            return getMysqlCdcSource(env, params);
+        } else if (dbType.equalsIgnoreCase(DBType.SQLSERVER.getName())) {
+            return getSqlServerCdcSource(env, params);
+        } else {
+            throw new Exception("Currently does not support related database types：" + dbType);
+        }
     }
 
     /* ============================================sqlserver cdc source============================================== */
